@@ -1,0 +1,7 @@
+# Du lieu YOLO cho mo hinh phat hien lon (PigDetect da doi sang YOLO)
+path: data/data_phat_hien_pig/pig_det
+train: images/train
+val: images/val
+test: images/test
+names:
+  0: lon

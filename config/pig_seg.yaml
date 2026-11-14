@@ -1,0 +1,6 @@
+# Du lieu YOLO-seg cho mat na lung lon (PIGRGB-Weight, phan RGB_MASK_3394)
+path: data/data_cat_lung_tinh_kg/pig_seg
+train: images/train
+val: images/val
+names:
+  0: lon

@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Du lieu, mo hinh, video (nang, khong dua len git)
+data_goc/
+data/data_phat_hien_pig/*
+!data/data_phat_hien_pig/*.py
+data/data_cat_lung_tinh_kg/*
+!data/data_cat_lung_tinh_kg/*.py
+data/kiem_tra_anh/
+models/*
+!models/.gitkeep
+!models/README.md
+recordings/*
+!recordings/.gitkeep
+runs/
+*.pt
+*.onnx
+*.mp4
+*.db
+
+# He dieu hanh, IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

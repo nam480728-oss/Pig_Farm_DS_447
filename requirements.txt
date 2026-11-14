@@ -1,0 +1,22 @@
+# Mo hinh anh (YOLO, theo doi BoT-SORT)
+ultralytics>=8.3
+supervision>=0.25
+opencv-python>=4.9
+numpy>=1.26
+
+# Can nang
+xgboost>=2.0
+scikit-learn>=1.4
+pandas>=2.1
+
+# He thong
+flask>=3.0
+apscheduler>=3.10
+pyyaml>=6.0
+python-dotenv>=1.0
+
+# Tai du lieu
+huggingface_hub>=0.25
+
+# Kiem thu
+pytest>=8.0

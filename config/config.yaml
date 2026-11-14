@@ -1,0 +1,61 @@
+# Cau hinh chung cua he thong. Gia tri la mac dinh, chinh lai theo trai.
+
+camera:
+  fps_toi_thieu: 10            # do nhip tho can it nhat 10 anh/giay
+  thu_muc_ghi: recordings
+  do_dai_doan_giay: 300        # FFmpeg ghi thanh doan 5 phut
+  giu_video_ngay: 7
+
+o_chuong:                      # moi o mot muc; vung ve tren anh luu trong config/zones/<id>.json
+  - id: A
+    ten: O A
+    camera: CAMERA_O_A         # ten bien trong .env
+    so_dang_ky: 20
+
+mo_hinh:
+  lon: models/pig_det.pt       # tu train tren PigDetect
+  mat_na: models/Pig_Seg/pig_seg.pt  # scripts/train_cat_lung.py (YOLO11s-seg tren PIGRGB-Weight)
+  can_nang: models/Pig_Kg/weight.json  # scripts/train_can_nang.py (XGBoost, 5 dac trung tu lay_dac_trung.py)
+  tu_the: models/posture.pt    # best.pt co san cua Gilt Posture
+  nguoi: yolo11n.pt            # YOLO goc COCO, tu tai
+  tracker: botsort.yaml
+  imgsz: 960
+  conf: 0.35
+
+dem:                           # chuc nang 1
+  gio: ["06:30", "17:00"]
+  dot_phut: 15
+  giay_on_dinh: 5
+
+nguoi:                         # chuc nang 2
+  canh_gac: {bat_dau: "21:00", ket_thuc: "05:00"}
+  khung_lien_tiep: 10
+
+tau_thoat:                     # chuc nang 3
+  giay_trong_vung: 5
+  cho_bao_lai_phut: 5
+
+phat_trien:                    # chuc nang 4
+  dot_do_phut: 10
+  khung_hop_le_toi_thieu: 5
+  nguong_coi_lon_nhanh: 0.10   # lech 10% so voi trung binh dan
+
+nhip_tho:                      # chuc nang 5a
+  moi_phut: 20                 # bao lau do mot dot
+  dot_giay: 60
+  fps: 10
+  nguong_dinh: 10.0            # dinh / trung vi pho
+  nhanh_tren: 60               # nhip/phut
+  cham_duoi: 10
+  nam_im_gio: 3
+  so_dot_khong_tho: 3
+
+bo_an:                         # chuc nang 5b
+  gio_cho_an: ["07:00", "16:30"]
+  cua_so_phut: 30
+  ti_le_o_da_an: 0.7
+  giam_muc_o: 0.25             # tong con-phut an giam 25% so voi 3 ngay truoc
+  diem_bao: 3
+
+thong_bao:
+  luon_bao: [nghi_trom, tau_thoat, nghi_chet]
