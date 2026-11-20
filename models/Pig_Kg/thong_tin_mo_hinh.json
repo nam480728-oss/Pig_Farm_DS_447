@@ -1,14 +1,24 @@
 {
-  "thoi_gian": "2026-11-10 01:21:53",
+  "thoi_gian": "2026-11-20 02:43:39",
   "dac_trung_theo_thu_tu": [
     "dien_tich",
     "chu_vi",
     "dai",
     "rong",
-    "lech_tam"
+    "dai_rong",
+    "x_cam",
+    "y_cam",
+    "x_tam",
+    "do_dac",
+    "do_cong"
   ],
-  "dac_trung_tho": false,
   "ti_le_kernel_phep_mo": 0.5,
+  "kernel_theo": "be_day_than (distance transform)",
+  "do_cong": {
+    "so_lat": 20,
+    "bo_moi_dau": 0.05
+  },
+  "x_cam_y_cam": "can toa do goc anh cat + kich thuoc khung goc: dac_trung(mask, goc_cat=(x1, y1), khung_wh=(W, H))",
   "noi_hop": 0.12,
   "don_vi": "pixel",
   "dieu_kien_anh": "RGB_9579: ảnh 960x540, camera thẳng đứng cao 1,88 m. Camera khác -> phải hiệu chỉnh tỉ lệ pixel.",
@@ -18,28 +28,28 @@
   ],
   "du_lieu": {
     "tong_anh_ban_dau": 9578,
-    "khong_thay_lon_hoac_thieu_dac_trung": 17,
-    "mask_cham_mep_anh": 265,
+    "khong_thay_lon_hoac_thieu_dac_trung": 16,
+    "mask_cham_mep_anh": 266,
     "con_lai": 9296,
     "so_con": 73
   },
-  "hang_tham_so": 4,
+  "hang_tham_so": 19,
   "tham_so": {
     "max_depth": 3,
     "learning_rate": 0.1,
-    "min_child_weight": 1.0,
+    "min_child_weight": 5.0,
     "subsample": 0.8,
     "seed": 42
   },
-  "so_cay": 350,
+  "so_cay": 515,
   "danh_gia_5fold_CV": {
-    "MAE_con_TB_kg": 2.387534241594587,
-    "MAE_anh_TB_kg": 4.254638060124976,
-    "R2_anh": 0.9660358206514348,
-    "R2_con": 0.9908408361704772,
+    "MAE_con_TB_kg": 2.275100829932804,
+    "MAE_anh_TB_kg": 3.988070780120185,
+    "R2_anh": 0.9711749148744334,
+    "R2_con": 0.991961679607084,
     "nguon": "tim_tham_so.csv + tom_tat.json (5-fold CV của đúng bộ này)"
   },
-  "MAE_tren_du_lieu_da_hoc_kg": 3.539064266480595,
+  "MAE_tren_du_lieu_da_hoc_kg": 3.007277360184057,
   "ghi_chu_MAE_da_hoc": "Sai số khi đoán lại chính dữ liệu đã học - CHỈ để so với MAE CV, KHÔNG phải điểm đánh giá.",
   "xgboost": "3.2.0"
 }

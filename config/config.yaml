@@ -13,10 +13,10 @@ o_chuong:                      # moi o mot muc; vung ve tren anh luu trong confi
     so_dang_ky: 20
 
 mo_hinh:
-  lon: models/pig_det.pt       # tu train tren PigDetect
+  lon: models/Pig_Det/models/pig_det.pt  # nhom khac train YOLO11l tren PigDetect
   mat_na: models/Pig_Seg/pig_seg.pt  # scripts/train_cat_lung.py (YOLO11s-seg tren PIGRGB-Weight)
-  can_nang: models/Pig_Kg/weight.json  # scripts/train_can_nang.py (XGBoost, 5 dac trung tu lay_dac_trung.py)
-  tu_the: models/posture.pt    # best.pt co san cua Gilt Posture
+  can_nang: models/Pig_Kg/weight.json  # scripts/train_can_nang.py (XGBoost hang 19, 10 dac trung tu lay_dac_trung.py)
+  tu_the: models/Pig_Posture/pig_posture.pt  # tu train YOLO11-cls dung / khong dung (data/data_posture_final_ok), nguong dung 0.8
   nguoi: yolo11n.pt            # YOLO goc COCO, tu tai
   tracker: botsort.yaml
   imgsz: 960

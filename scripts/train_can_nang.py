@@ -1,21 +1,26 @@
-"""Train mô hình ƯỚC TÍNH CÂN NẶNG (XGBoost) từ 5 đặc trưng lưng lợn. Chạy 2 LẦN:
+"""Train mô hình ƯỚC TÍNH CÂN NẶNG (XGBoost) từ 10 đặc trưng lưng lợn. Chạy 2 LẦN:
 
-LẦN 1 - TÌM THAM SỐ (khoảng 3-5 phút, CPU):
+10 đặc trưng (đo bởi scripts/lay_dac_trung.py trên mask đã bỏ tai/chân/đuôi, xem docstring file đó):
+    kích thước : dien_tich, chu_vi, dai, rong (dài/rộng theo SVD), dai_rong
+    vị trí     : x_cam, y_cam (trọng tâm con lợn trong khung hình, 0 = giữa khung)
+    hình dáng  : x_tam, do_dac, do_cong (cho mô hình biết số đo kích thước đang bị lệch bao nhiêu)
+
+LẦN 1 - TÌM THAM SỐ (khoảng 5-10 phút, CPU):
     python scripts/train_can_nang.py --tim-tham-so
-    Thử 36 bộ tham số (max_depth × learning_rate × min_child_weight). Mỗi bộ chạy 5-fold CV theo con lợn:
+    Thử 54 bộ tham số (max_depth × learning_rate × min_child_weight). Mỗi bộ chạy 5-fold CV theo con lợn:
         lượt i: TEST = fold i (các con chưa từng thấy) | trong 4 fold còn lại: 1 fold làm VAL (dừng sớm chọn số cây),
                 3 fold làm TRAIN -> sau đó học lại trên đủ 4 fold với số cây đã chọn -> dự đoán fold test.
-    Xếp hạng 36 bộ theo MAE trung bình theo con -> models/Pig_Kg/tim_tham_so.csv
+    Xếp hạng 54 bộ theo MAE trung bình theo con -> models/Pig_Kg/tim_tham_so.csv
     Với bộ hạng 1: lưu đầy đủ kết quả CV (chỉ số, dự đoán từng ảnh/con, train-val-test từng lượt, biểu đồ)
     -> BẰNG CHỨNG đánh giá (mỗi con lợn được chấm đúng 1 lần khi chưa thấy).
     In thêm gợi ý theo QUY TẮC 1 SAI SỐ CHUẨN: bộ đơn giản nhất trong các bộ tốt ngang nhau.
 
 LẦN 2 - TRAIN MÔ HÌNH CUỐI (vài giây):
     python scripts/train_can_nang.py              # dùng bộ hạng 1 trong tim_tham_so.csv
-    python scripts/train_can_nang.py --hang 4     # dùng bộ hạng 4 (vd bộ do quy tắc 1 sai số chuẩn gợi ý)
+    python scripts/train_can_nang.py --hang 19    # dùng bộ hạng 19 (bộ do quy tắc 1 sai số chuẩn gợi ý, đang dùng)
     Đọc tham số từ tim_tham_so.csv -> học trên CẢ 5 fold (không chia val/test, vì đánh giá đã làm bằng CV)
     -> models/Pig_Kg/weight.json + thong_tin_mo_hinh.json + biểu đồ độ quan trọng đặc trưng.
-    Nếu bộ được chọn KHÁC bộ đang có đánh giá chi tiết -> tự chạy lại 5-fold CV cho bộ đó (khoảng 5 giây)
+    Nếu bộ được chọn KHÁC bộ đang có đánh giá chi tiết -> tự chạy lại 5-fold CV cho bộ đó (khoảng 5-20 giây)
     để tom_tat.json, du_doan_*.csv, ket_qua_tung_fold.csv và biểu đồ luôn khớp với weight.json.
 
 Đầu vào: data/data_cat_lung_tinh_kg/dac_trung.csv (tạo bởi scripts/lay_dac_trung.py). Hướng dẫn: scripts/train_can_nang.md
@@ -36,14 +41,16 @@ THU_MUC_RA = GOC / "models" / "Pig_Kg"
 MODEL_RA = THU_MUC_RA / "weight.json"
 CSV_THAM_SO = THU_MUC_RA / "tim_tham_so.csv"
 
-DAC_TRUNG = ["dien_tich", "chu_vi", "dai", "rong", "lech_tam"]   # THỨ TỰ cột đưa vào mô hình - không được đổi
+DAC_TRUNG = ["dien_tich", "chu_vi", "dai", "rong", "dai_rong",    # THỨ TỰ cột đưa vào mô hình - không được đổi
+             "x_cam", "y_cam", "x_tam", "do_dac", "do_cong"]       # (phải trùng TEN_DAC_TRUNG của lay_dac_trung.py)
 NHOM_KG = [70, 90, 110, 130, 150, 170, 195]                        # biên các nhóm kg cho confusion matrix
 
-# Lưới tìm tham số: 4 × 3 × 3 = 36 bộ.
-#   learning_rate nhỏ (≤ 0,1) + nhiều cây: Friedman (2001); cây nông: Hastie et al., ESL chương 10;
-#   chỉ có 5 đặc trưng, quan hệ với kg gần tuyến tính -> không cần cây sâu.
+# Lưới tìm tham số: 6 × 3 × 3 = 54 bộ.
+#   learning_rate nhỏ (≤ 0,1) + nhiều cây: Friedman (2001); cây nông: Hastie et al., ESL chương 10.
+#   10 đặc trưng có TƯƠNG TÁC (vd. diện tích lớn NHƯNG độ đặc thấp / độ cong cao -> số đo bị lệch, phải bù)
+#   -> có thể cần cây sâu hơn bản 5 đặc trưng (3-6) -> mở rộng tới 8; quy tắc 1 SE vẫn ưu tiên cây nông.
 LUOI = {
-    "max_depth": [3, 4, 5, 6],
+    "max_depth": [3, 4, 5, 6, 7, 8],
     "learning_rate": [0.03, 0.05, 0.1],
     "min_child_weight": [1, 5, 10],
 }
@@ -56,26 +63,27 @@ SEED = 42
 
 def doc_tham_so():
     ap = argparse.ArgumentParser(description="Train XGBoost ước tính cân nặng lợn (2 lần: tìm tham số, train cuối)")
-    ap.add_argument("--tim-tham-so", action="store_true", help="LẦN 1: thử 36 bộ tham số bằng 5-fold CV")
+    ap.add_argument("--tim-tham-so", action="store_true", help="LẦN 1: thử 54 bộ tham số bằng 5-fold CV")
     ap.add_argument("--hang", type=int, default=1, help="LẦN 2: dùng bộ tham số hạng mấy trong tim_tham_so.csv")
     # Bộ lọc dữ liệu: chỉ có tác dụng ở LẦN 1. LẦN 2 tự đọc lại bộ lọc từ tim_tham_so.csv để dùng ĐÚNG cùng dữ liệu.
     ap.add_argument("--giu-cham-bien", action="store_true", help="giữ ảnh có mask chạm mép (lợn có thể bị cắt cụt)")
     ap.add_argument("--loc-nhoe", type=float, default=0, help="loại ảnh có do_net < giá trị này; 0 = không lọc")
-    ap.add_argument("--dac-trung-tho", action="store_true", help="dùng đặc trưng mask thô (chưa bỏ tai/chân/đuôi)")
     ap.add_argument("--nguong-kg", type=float, default=5, help="ngưỡng sai số chấp nhận (kg) để tính tỉ lệ đạt")
     return ap.parse_args()
 
 
 # =============================================================================== dữ liệu
-def doc_du_lieu(giu_cham_bien, loc_nhoe, dac_trung_tho):
+def doc_du_lieu(giu_cham_bien, loc_nhoe):
     """Đọc CSV, loại ảnh xấu, ghi lại đã loại bao nhiêu ảnh và vì sao (để báo cáo minh bạch)."""
     if not CSV_VAO.exists():
         sys.exit(f"Không thấy {CSV_VAO}. Chạy scripts/lay_dac_trung.py trước.")
     d = pd.read_csv(CSV_VAO)
-    cot = [f"{c}_tho" for c in DAC_TRUNG] if dac_trung_tho else DAC_TRUNG
+    thieu = [c for c in DAC_TRUNG if c not in d.columns]
+    if thieu:
+        sys.exit(f"{CSV_VAO.name} thiếu cột {thieu} -> CSV cũ? Chạy lại scripts/lay_dac_trung.py.")
     loai = {"tong_anh_ban_dau": len(d)}
 
-    bo = d["khong_thay_lon"].astype(bool) | d[cot].isna().any(axis=1)
+    bo = d["khong_thay_lon"].astype(bool) | d[DAC_TRUNG].isna().any(axis=1)
     loai["khong_thay_lon_hoac_thieu_dac_trung"] = int(bo.sum())
     d = d[~bo]
     if not giu_cham_bien:
@@ -88,9 +96,6 @@ def doc_du_lieu(giu_cham_bien, loc_nhoe, dac_trung_tho):
         d = d[~bo]
     loai["con_lai"] = len(d)
     loai["so_con"] = int(d["con"].nunique())
-
-    if dac_trung_tho:   # đổi tên cột *_tho -> tên chuẩn để phần sau dùng chung DAC_TRUNG
-        d = d.drop(columns=DAC_TRUNG).rename(columns={f"{c}_tho": c for c in DAC_TRUNG})
     return d.reset_index(drop=True), loai
 
 
@@ -289,11 +294,11 @@ def ve_bieu_do_cv(d, con, luot, nguong, thu_muc):
 
     # 7. Tương quan giữa các đặc trưng và kg
     tq = d[DAC_TRUNG + ["kg"]].corr()
-    fig, ax = plt.subplots(figsize=(6.5, 5.5))
+    fig, ax = plt.subplots(figsize=(9, 8))
     ax.imshow(tq, cmap="RdBu_r", vmin=-1, vmax=1)
     for i in range(len(tq)):
         for j in range(len(tq)):
-            ax.text(j, i, f"{tq.iloc[i, j]:.2f}", ha="center", va="center", fontsize=9)
+            ax.text(j, i, f"{tq.iloc[i, j]:.2f}", ha="center", va="center", fontsize=8)
     ax.set(xticks=range(len(tq)), yticks=range(len(tq)), xticklabels=tq.columns, yticklabels=tq.columns,
            title="Hệ số tương quan Pearson")
     plt.setp(ax.get_xticklabels(), rotation=30, ha="right")
@@ -395,7 +400,7 @@ def in_ket_qua(ts, so_cay, hang, cv, co_so, luot, nguong_kg):
 
 # =============================================================================== LẦN 1
 def lan_1_tim_tham_so(a):
-    d, loai = doc_du_lieu(a.giu_cham_bien, a.loc_nhoe, a.dac_trung_tho)
+    d, loai = doc_du_lieu(a.giu_cham_bien, a.loc_nhoe)
     print(f"Dữ liệu: {loai}")
     cac_bo = [dict(zip(LUOI, v)) for v in itertools.product(*LUOI.values())]
     print(f"\n=== TÌM THAM SỐ: {len(cac_bo)} bộ × 5 fold ===")
@@ -426,7 +431,7 @@ def lan_1_tim_tham_so(a):
     bang = bang.sort_values(["MAE_con_TB", "MAE_anh_TB"]).reset_index(drop=True)
     bang.insert(0, "hang", range(1, len(bang) + 1))
     # ghi bộ lọc dữ liệu vào từng dòng -> LẦN 2 đọc lại để train trên ĐÚNG cùng dữ liệu
-    bang["giu_cham_bien"], bang["loc_nhoe"], bang["dac_trung_tho"] = a.giu_cham_bien, a.loc_nhoe, a.dac_trung_tho
+    bang["giu_cham_bien"], bang["loc_nhoe"] = a.giu_cham_bien, a.loc_nhoe
     d_oof, luot = ket_qua[int(bang.loc[0, "_vt"])]
     bang = bang.drop(columns="_vt")
     bang.to_csv(CSV_THAM_SO, index=False, encoding="utf-8-sig")
@@ -434,7 +439,7 @@ def lan_1_tim_tham_so(a):
 
     # ---- lưu đầy đủ kết quả CV của bộ hạng 1 (nếu LẦN 2 chọn hạng khác, LẦN 2 sẽ tự lưu lại cho hạng đó)
     print()
-    bo_loc = {"giu_cham_bien": a.giu_cham_bien, "loc_nhoe": a.loc_nhoe, "dac_trung_tho": a.dac_trung_tho}
+    bo_loc = {"giu_cham_bien": a.giu_cham_bien, "loc_nhoe": a.loc_nhoe}
     cv, co_so, luot = luu_chi_tiet_cv(d_oof, luot, bang, 1, loai, bo_loc, a.nguong_kg,
                                       {"thoi_gian_tim_phut": round((time.time() - bat_dau) / 60, 1)})
     in_ket_qua({k: tot[k] for k in LUOI}, int(tot["so_cay_TB"]), 1, cv, co_so, luot, a.nguong_kg)
@@ -460,21 +465,21 @@ def lan_2_train_cuoi(a):
     so_cay = int(r["so_cay_TB"])
 
     # Bộ lọc lấy từ tim_tham_so.csv (không lấy từ dòng lệnh) -> chắc chắn cùng dữ liệu với lúc tìm tham số
-    giu, nhoe, tho = bool(r["giu_cham_bien"]), float(r["loc_nhoe"]), bool(r["dac_trung_tho"])
-    d, loai = doc_du_lieu(giu, nhoe, tho)
+    giu, nhoe = bool(r["giu_cham_bien"]), float(r["loc_nhoe"])
+    d, loai = doc_du_lieu(giu, nhoe)
     print(f"Dữ liệu: {loai}")
     print(f"Tham số hạng {a.hang}: depth {int(ts['max_depth'])}, lr {ts['learning_rate']:g}, "
           f"mcw {ts['min_child_weight']:g}, {so_cay} cây (TB 5 lượt) | MAE CV theo con {r['MAE_con_TB']:.3f} kg")
 
     # Các file đánh giá chi tiết (tom_tat.json, du_doan_*.csv, ket_qua_tung_fold.csv, biểu đồ) phải mô tả ĐÚNG bộ
     # đang dùng. LẦN 1 chỉ lưu chi tiết cho hạng 1 -> nếu chọn hạng khác thì chạy lại 5-fold CV cho bộ này
-    # (cùng quy trình, cùng seed -> số liệu khớp dòng của nó trong tim_tham_so.csv, mất khoảng 5 giây).
+    # (cùng quy trình, cùng seed -> số liệu khớp dòng của nó trong tim_tham_so.csv, mất khoảng 5-20 giây).
     tt_cu = THU_MUC_RA / "tom_tat.json"
     cu = json.loads(tt_cu.read_text(encoding="utf-8")) if tt_cu.exists() else {}
     if cu.get("bo_duoc_danh_gia", {}).get("hang") != a.hang:
         print(f"\nĐánh giá chi tiết hiện có không phải của hạng {a.hang} -> chạy lại 5-fold CV cho bộ này...")
         d_oof, luot = cross_validation(d, ts, a.nguong_kg)
-        bo_loc = {"giu_cham_bien": giu, "loc_nhoe": nhoe, "dac_trung_tho": tho}
+        bo_loc = {"giu_cham_bien": giu, "loc_nhoe": nhoe}
         them = {k: cu[k] for k in ("thoi_gian_tim_phut",) if k in cu}
         cv, co_so, luot = luu_chi_tiet_cv(d_oof, luot, bang, a.hang, loai, bo_loc, a.nguong_kg, them)
         in_ket_qua(ts, so_cay, a.hang, cv, co_so, luot, a.nguong_kg)
@@ -492,7 +497,7 @@ def lan_2_train_cuoi(a):
     gt = np.array([gain.get(c, 0) for c in DAC_TRUNG])
     gt = gt / max(gt.sum(), 1e-9) * 100
     (THU_MUC_RA / "bieu_do").mkdir(parents=True, exist_ok=True)
-    fig, ax = plt.subplots(figsize=(7, 4))
+    fig, ax = plt.subplots(figsize=(7, 5))
     ax.barh(DAC_TRUNG, gt, color="#3b7dd8")
     for i, v in enumerate(gt):
         ax.text(v, i, f" {v:.1f} %", va="center")
@@ -501,13 +506,15 @@ def lan_2_train_cuoi(a):
 
     # Thông tin để test_kg.py / pipeline dùng ĐÚNG như lúc train
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from lay_dac_trung import NOI_HOP, TI_LE_KERNEL
+    from lay_dac_trung import BO_DAU, NOI_HOP, SO_LAT, TI_LE_KERNEL
     import xgboost
     thong_tin = {
         "thoi_gian": time.strftime("%Y-%m-%d %H:%M:%S"),
         "dac_trung_theo_thu_tu": DAC_TRUNG,
-        "dac_trung_tho": tho,
         "ti_le_kernel_phep_mo": TI_LE_KERNEL,
+        "kernel_theo": "be_day_than (distance transform)",
+        "do_cong": {"so_lat": SO_LAT, "bo_moi_dau": BO_DAU},
+        "x_cam_y_cam": "can toa do goc anh cat + kich thuoc khung goc: dac_trung(mask, goc_cat=(x1, y1), khung_wh=(W, H))",
         "noi_hop": NOI_HOP,
         "don_vi": "pixel",
         "dieu_kien_anh": "RGB_9579: ảnh 960x540, camera thẳng đứng cao 1,88 m. Camera khác -> phải hiệu chỉnh tỉ lệ pixel.",
@@ -534,6 +541,11 @@ def lan_2_train_cuoi(a):
 def main():
     sys.stdout.reconfigure(encoding="utf-8")
     a = doc_tham_so()
+    # Danh sách đặc trưng ở đây phải trùng file đo đặc trưng (lúc chạy thật dùng lay_dac_trung.dac_trung)
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from lay_dac_trung import TEN_DAC_TRUNG
+    if TEN_DAC_TRUNG != DAC_TRUNG:
+        sys.exit(f"DAC_TRUNG {DAC_TRUNG} khác TEN_DAC_TRUNG của lay_dac_trung.py {TEN_DAC_TRUNG}")
     THU_MUC_RA.mkdir(parents=True, exist_ok=True)
     if a.tim_tham_so:
         lan_1_tim_tham_so(a)

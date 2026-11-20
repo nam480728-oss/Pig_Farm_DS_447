@@ -1,0 +1,39 @@
+{
+  "pen": "A",
+  "size": [
+    640,
+    360
+  ],
+  "registered": 2,
+  "confidence": 0.25,
+  "polygon": [
+    [
+      20,
+      20
+    ],
+    [
+      420,
+      20
+    ],
+    [
+      420,
+      330
+    ],
+    [
+      20,
+      330
+    ]
+  ],
+  "count": {
+    "duration": 900,
+    "recount": 120,
+    "stable": 5,
+    "min_coverage": 0.8
+  },
+  "escape": {
+    "hold": 5,
+    "cooldown": 300,
+    "max_gap": 1,
+    "cooldown_scope": "pen"
+  }
+}

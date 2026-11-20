@@ -1,0 +1,373 @@
+{
+  "thoi_gian_train_phut": 1.7,
+  "moi_truong": {
+    "python": "3.11.7",
+    "ultralytics": "8.4.48",
+    "torch": "2.11.0+cu128",
+    "cuda": true,
+    "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU"
+  },
+  "so_anh": {
+    "train/dung": 685,
+    "train/khong_dung": 610,
+    "val/dung": 191,
+    "val/khong_dung": 178,
+    "test/dung": 74,
+    "test/khong_dung": 112
+  },
+  "thu_muc_train": "models\\Pig_Posture\\train",
+  "tham_so": {
+    "data": "D:\\Pig_Farm\\data\\data_posture_final_ok",
+    "model": "yolo11n-cls.pt",
+    "epochs": 60,
+    "imgsz": 224,
+    "batch": 32,
+    "patience": 15,
+    "workers": 4,
+    "seed": 42,
+    "device": "0",
+    "thu_muc_ra": "D:\\Pig_Farm\\models\\Pig_Posture",
+    "tiep_tuc": false,
+    "chi_danh_gia": false
+  },
+  "thoi_gian": "2026-11-19 12:26:31",
+  "model": "models\\Pig_Posture\\pig_posture.pt",
+  "du_lieu": "data\\data_posture_final_ok",
+  "lop": {
+    "0": "dung",
+    "1": "khong_dung"
+  },
+  "val": {
+    "tong": {
+      "so_anh": 369,
+      "accuracy": 0.8835,
+      "dung": {
+        "precision": 0.8895,
+        "recall": 0.8848,
+        "f1": 0.8871,
+        "so_anh": 191
+      },
+      "khong_dung": {
+        "precision": 0.8771,
+        "recall": 0.882,
+        "f1": 0.8796,
+        "so_anh": 178
+      }
+    },
+    "theo_trai": {
+      "alameer": {
+        "so_anh": 85,
+        "accuracy": 0.8941,
+        "dung": {
+          "precision": 0.8333,
+          "recall": 0.8621,
+          "f1": 0.8475,
+          "so_anh": 29
+        },
+        "khong_dung": {
+          "precision": 0.9273,
+          "recall": 0.9107,
+          "f1": 0.9189,
+          "so_anh": 56
+        }
+      },
+      "bergamini": {
+        "so_anh": 61,
+        "accuracy": 0.9344,
+        "dung": {
+          "precision": 0.8667,
+          "recall": 0.8667,
+          "f1": 0.8667,
+          "so_anh": 15
+        },
+        "khong_dung": {
+          "precision": 0.9565,
+          "recall": 0.9565,
+          "f1": 0.9565,
+          "so_anh": 46
+        }
+      },
+      "danuma": {
+        "so_anh": 87,
+        "accuracy": 0.7586,
+        "dung": {
+          "precision": 0.7826,
+          "recall": 0.766,
+          "f1": 0.7742,
+          "so_anh": 47
+        },
+        "khong_dung": {
+          "precision": 0.7317,
+          "recall": 0.75,
+          "f1": 0.7407,
+          "so_anh": 40
+        }
+      },
+      "psota": {
+        "so_anh": 66,
+        "accuracy": 0.8636,
+        "dung": {
+          "precision": 0.8621,
+          "recall": 0.8333,
+          "f1": 0.8475,
+          "so_anh": 30
+        },
+        "khong_dung": {
+          "precision": 0.8649,
+          "recall": 0.8889,
+          "f1": 0.8767,
+          "so_anh": 36
+        }
+      },
+      "rgb9579": {
+        "so_anh": 70,
+        "accuracy": 1.0,
+        "dung": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "so_anh": 70
+        },
+        "khong_dung": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "so_anh": 0
+        }
+      }
+    },
+    "chi_pigdetect": {
+      "so_anh": 299,
+      "accuracy": 0.8562,
+      "dung": {
+        "precision": 0.825,
+        "recall": 0.8182,
+        "f1": 0.8216,
+        "so_anh": 121
+      },
+      "khong_dung": {
+        "precision": 0.8771,
+        "recall": 0.882,
+        "f1": 0.8796,
+        "so_anh": 178
+      }
+    },
+    "pigdetect_theo_so_lon_ben_canh": {
+      "0-1 con": {
+        "so_anh": 122,
+        "accuracy": 0.8525,
+        "dung": {
+          "precision": 0.8621,
+          "recall": 0.8333,
+          "f1": 0.8475,
+          "so_anh": 60
+        },
+        "khong_dung": {
+          "precision": 0.8438,
+          "recall": 0.871,
+          "f1": 0.8571,
+          "so_anh": 62
+        }
+      },
+      "2 con": {
+        "so_anh": 74,
+        "accuracy": 0.8514,
+        "dung": {
+          "precision": 0.7667,
+          "recall": 0.8519,
+          "f1": 0.807,
+          "so_anh": 27
+        },
+        "khong_dung": {
+          "precision": 0.9091,
+          "recall": 0.8511,
+          "f1": 0.8791,
+          "so_anh": 47
+        }
+      },
+      ">=3 con": {
+        "so_anh": 103,
+        "accuracy": 0.8641,
+        "dung": {
+          "precision": 0.8125,
+          "recall": 0.7647,
+          "f1": 0.7879,
+          "so_anh": 34
+        },
+        "khong_dung": {
+          "precision": 0.8873,
+          "recall": 0.913,
+          "f1": 0.9,
+          "so_anh": 69
+        }
+      }
+    }
+  },
+  "test": {
+    "tong": {
+      "so_anh": 186,
+      "accuracy": 0.9086,
+      "dung": {
+        "precision": 0.8519,
+        "recall": 0.9324,
+        "f1": 0.8903,
+        "so_anh": 74
+      },
+      "khong_dung": {
+        "precision": 0.9524,
+        "recall": 0.8929,
+        "f1": 0.9217,
+        "so_anh": 112
+      }
+    },
+    "theo_trai": {
+      "alameer": {
+        "so_anh": 43,
+        "accuracy": 0.8837,
+        "dung": {
+          "precision": 0.8333,
+          "recall": 0.7692,
+          "f1": 0.8,
+          "so_anh": 13
+        },
+        "khong_dung": {
+          "precision": 0.9032,
+          "recall": 0.9333,
+          "f1": 0.918,
+          "so_anh": 30
+        }
+      },
+      "bergamini": {
+        "so_anh": 31,
+        "accuracy": 0.9677,
+        "dung": {
+          "precision": 0.8,
+          "recall": 1.0,
+          "f1": 0.8889,
+          "so_anh": 4
+        },
+        "khong_dung": {
+          "precision": 1.0,
+          "recall": 0.963,
+          "f1": 0.9811,
+          "so_anh": 27
+        }
+      },
+      "danuma": {
+        "so_anh": 44,
+        "accuracy": 0.8636,
+        "dung": {
+          "precision": 0.7778,
+          "recall": 0.875,
+          "f1": 0.8235,
+          "so_anh": 16
+        },
+        "khong_dung": {
+          "precision": 0.9231,
+          "recall": 0.8571,
+          "f1": 0.8889,
+          "so_anh": 28
+        }
+      },
+      "psota": {
+        "so_anh": 33,
+        "accuracy": 0.8485,
+        "dung": {
+          "precision": 0.5455,
+          "recall": 1.0,
+          "f1": 0.7059,
+          "so_anh": 6
+        },
+        "khong_dung": {
+          "precision": 1.0,
+          "recall": 0.8148,
+          "f1": 0.898,
+          "so_anh": 27
+        }
+      },
+      "rgb9579": {
+        "so_anh": 35,
+        "accuracy": 1.0,
+        "dung": {
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "so_anh": 35
+        },
+        "khong_dung": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "so_anh": 0
+        }
+      }
+    },
+    "chi_pigdetect": {
+      "so_anh": 151,
+      "accuracy": 0.8874,
+      "dung": {
+        "precision": 0.7391,
+        "recall": 0.8718,
+        "f1": 0.8,
+        "so_anh": 39
+      },
+      "khong_dung": {
+        "precision": 0.9524,
+        "recall": 0.8929,
+        "f1": 0.9217,
+        "so_anh": 112
+      }
+    },
+    "pigdetect_theo_so_lon_ben_canh": {
+      "0-1 con": {
+        "so_anh": 50,
+        "accuracy": 0.82,
+        "dung": {
+          "precision": 0.6842,
+          "recall": 0.8125,
+          "f1": 0.7429,
+          "so_anh": 16
+        },
+        "khong_dung": {
+          "precision": 0.9032,
+          "recall": 0.8235,
+          "f1": 0.8615,
+          "so_anh": 34
+        }
+      },
+      "2 con": {
+        "so_anh": 47,
+        "accuracy": 0.9574,
+        "dung": {
+          "precision": 0.8333,
+          "recall": 1.0,
+          "f1": 0.9091,
+          "so_anh": 10
+        },
+        "khong_dung": {
+          "precision": 1.0,
+          "recall": 0.9459,
+          "f1": 0.9722,
+          "so_anh": 37
+        }
+      },
+      ">=3 con": {
+        "so_anh": 54,
+        "accuracy": 0.8889,
+        "dung": {
+          "precision": 0.7333,
+          "recall": 0.8462,
+          "f1": 0.7857,
+          "so_anh": 13
+        },
+        "khong_dung": {
+          "precision": 0.9487,
+          "recall": 0.9024,
+          "f1": 0.925,
+          "so_anh": 41
+        }
+      }
+    },
+    "so_anh_sai": 17
+  }
+}

@@ -1,0 +1,7 @@
+# Auto-configured dataset location. Original data are never modified.
+path: /Users/yuanliuu/Documents/ĐỒ ÁN CHUYÊN NGHÀNH/pig_det
+train: images/train
+val: images/val
+test: images/test
+names:
+  0: pig

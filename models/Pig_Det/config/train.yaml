@@ -1,0 +1,13 @@
+model: yolo11l.pt
+data: config/data.yaml
+epochs: 100
+imgsz: 960
+batch: 4
+device: auto
+workers: 0
+seed: 42
+deterministic: true
+patience: 25
+project: runs/detect
+name: pig_set_baseline
+exist_ok: false
